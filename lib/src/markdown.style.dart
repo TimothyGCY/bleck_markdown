@@ -1,7 +1,6 @@
+import 'package:bleck_markdown/src/css_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-
-import 'package:blecknote/utils/css_utils.dart';
 
 const Color separatorColor = Color(0xFFD7DDE3);
 const Border bottomLine = Border(
@@ -81,21 +80,21 @@ Map<String, Style> markdownStyle = {
   ),
   'blockquote': Style(
     margin: const EdgeInsets.only(top: 0, bottom: 16),
-    padding: EdgeInsets.symmetric(
-      horizontal: emToPx(1),
+    padding: const EdgeInsets.symmetric(
+      horizontal: 0,
       vertical: 0,
     ),
     color: const Color(0xFF57606A),
-    border: Border(
-      left: BorderSide(
-        width: emToPx(0.25),
-        style: BorderStyle.solid,
-        color: separatorColor,
-      ),
-    ),
+    // border: Border(
+    //   left: BorderSide(
+    //     width: emToPx(0.25),
+    //     style: BorderStyle.solid,
+    //     color: separatorColor,
+    //   ),
+    // ),
   ),
-  'blockquote>:first-child': Style(margin: const EdgeInsets.only(top: 0)),
-  'blockquote>:last-child': Style(margin: const EdgeInsets.only(bottom: 0)),
+  // 'blockquote>:first-child': Style(margin: const EdgeInsets.only(top: 0)),
+  // 'blockquote>:last-child': Style(margin: const EdgeInsets.only(bottom: 0)),
   'dl': Style(
     padding: const EdgeInsets.all(0),
   ),
