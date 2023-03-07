@@ -1,11 +1,12 @@
 import 'dart:developer';
 
 import 'package:bleck_markdown/src/components/blockquote.dart';
-import 'package:bleck_markdown/src/css_utils.dart';
+import 'package:bleck_markdown/src/components/code_block.dart';
+import 'package:bleck_markdown/src/components/inline_code.dart';
+import 'package:bleck_markdown/src/components/task_item.dart';
+import 'package:bleck_markdown/src/html_view.dart';
 import 'package:bleck_markdown/src/markdown.style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_highlight/flutter_highlight.dart';
-import 'package:flutter_highlight/themes/nord.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:markdown/markdown.dart' hide Text;
 
@@ -32,31 +33,12 @@ class _MarkdownPreviewState extends State<MarkdownPreview> {
       encodeHtml: false,
     );
 
-    // debugPrint(html);
-
     return html;
   }
 
-  /*
-<blockquote>
-	<p>Layer 1</p>
-	<blockquote>
-			<p>Layer 2</p>
-		</blockquote>
-	</blockquote>
-	<blockquote>
-		<blockquote>
-			<p>asdf
-			asdf</p>
-		</blockquote>
-	</blockquote>
-	*/
-
-  Widget _createNewBlockquote(List<StyledElement> elements) {
-    String parent = '';
+  Widget? _createNewBlockquote(List<StyledElement> elements) {
+    Widget? parent;
     List<Widget> body = [];
-
-    inspect(elements);
 
     List<StyledElement> filteredElements = [];
     for (StyledElement element in elements) {
@@ -65,16 +47,18 @@ class _MarkdownPreviewState extends State<MarkdownPreview> {
       }
     }
 
-    if (filteredElements.first.children.length == 1) {
-      parent =
-          (filteredElements.first.children.first as TextContentElement).text ??
-              '';
+    final firstChildren = filteredElements.first.children;
+    if (firstChildren.length == 1) {
+      if (firstChildren.first.runtimeType.toString() == 'TextContentElement') {
+        String? title = (firstChildren.first as TextContentElement).text;
+        if (title != null) parent = Text(title);
+      }
     } else {
-      body.add(_createNewBlockquote(filteredElements.first.children));
+      body.add(_createNewBlockquote(firstChildren)!);
     }
 
     for (int i = 1; i < filteredElements.length; i++) {
-      body.add(_createNewBlockquote(filteredElements[i].children));
+      body.add(_createNewBlockquote(filteredElements[i].children)!);
     }
 
     return BlockQuote(
@@ -85,80 +69,74 @@ class _MarkdownPreviewState extends State<MarkdownPreview> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: SingleChildScrollView(
-        child: Html(
-          data: _parseToMarkdown(widget.data),
-          tagsList: Html.tags..addAll(['input']),
-          style: markdownStyle,
-          customRender: {
-            'pre': (context, child) {
-              StyledElement codeElement = context.tree.children.first;
-              String codeLang = codeElement.elementClasses.first.substring(9);
-              TextContentElement codeContentElement =
-                  codeElement.children.first as TextContentElement;
-              String code = codeContentElement.text ?? '';
-              return Container(
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(12)),
-                width: double.infinity,
-                child: HighlightView(
-                  code.trim(),
-                  language: codeLang,
-                  padding: const EdgeInsets.all(12),
-                  tabSize: 2,
-                  theme: widget.codeTheme ?? nordTheme,
-                  textStyle: const TextStyle(fontFamily: 'monospace'),
-                ),
-              );
-            },
-            'code': (context, child) {
-              final TextContentElement codeElement =
-                  context.tree.children.first as TextContentElement;
-              return Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: emToPx(0.2), horizontal: emToPx(0.4)),
-                margin: const EdgeInsets.all(0),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(31, 175, 184, 193),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  codeElement.text ?? '',
-                  style: const TextStyle(fontFamily: 'monospace'),
-                ),
-              );
-            },
-            'input': (context, child) {
-              return null;
-            },
-            'li': (context, child) {
-              List<StyledElement> children = context.tree.children;
-              if (children.length == 1) {
-                return null;
-              }
-              StyledElement checkboxElement = children.first;
-              TextContentElement textContentElement =
-                  children.last as TextContentElement;
-              String title = textContentElement.text ?? '';
-              return ListTile(
-                leading: Checkbox(
-                  value: checkboxElement.attributes['checked'] == 'true',
-                  onChanged: null,
-                ),
-                title: Text(title),
-              );
-            },
-            'blockquote': (context, child) {
-              try {
-                List<StyledElement> blockquoteElements = context.tree.children;
-                return _createNewBlockquote(blockquoteElements);
-              } catch (e) {
-                return Text(e.toString());
-              }
-            },
-          },
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Html(
+              data: _parseToMarkdown(widget.data),
+              tagsList: Html.tags..addAll(['input']),
+              style: markdownStyle,
+              customRender: {
+                'pre': (context, child) {
+                  StyledElement codeElement = context.tree.children.first;
+                  String codeLang =
+                      codeElement.elementClasses.first.substring(9);
+                  TextContentElement codeContentElement =
+                      codeElement.children.first as TextContentElement;
+                  String code = codeContentElement.text ?? '';
+                  return CodeBlock(
+                    code: code,
+                    language: codeLang,
+                  );
+                },
+                'code': (context, child) {
+                  final TextContentElement codeElement =
+                      context.tree.children.first as TextContentElement;
+                  return InlineCode(codeElement.text ?? '');
+                },
+                'input': (context, child) {
+                  return const SizedBox();
+                },
+                'li': (context, child) {
+                  try {
+                    List<StyledElement> children = context.tree.children;
+                    StyledElement firstElement = children.first;
+                    inspect(firstElement);
+                    if (firstElement.attributes['type'] == 'checkbox') {
+                      if (children.length == 1) {
+                        return TaskItem(
+                          checked: firstElement.attributes['checked'] == 'true',
+                        );
+                      }
+
+                      TextContentElement textContentElement =
+                          children.last as TextContentElement;
+                      String title = textContentElement.text ?? '';
+                      return TaskItem(
+                        title: title,
+                        checked: firstElement.attributes['checked'] == 'true',
+                      );
+                    }
+                    return null;
+                  } catch (e) {
+                    return null;
+                  }
+                },
+                'blockquote': (context, child) {
+                  try {
+                    List<StyledElement> blockquoteElements =
+                        context.tree.children;
+                    return _createNewBlockquote(blockquoteElements);
+                  } catch (e) {
+                    return const SizedBox();
+                  }
+                },
+              },
+            ),
+            HTMLView(source: _parseToMarkdown(widget.data)),
+          ],
         ),
       ),
     );

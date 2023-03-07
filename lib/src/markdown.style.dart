@@ -21,7 +21,7 @@ Style _headline = Style(
 );
 Style _list = Style(
   margin: const EdgeInsets.symmetric(vertical: 0),
-  padding: EdgeInsets.only(left: emToPx(2)),
+  // padding: EdgeInsets.only(left: emToPx(2)),
 );
 Style _tableCell = Style(
   padding: const EdgeInsets.symmetric(
@@ -85,13 +85,6 @@ Map<String, Style> markdownStyle = {
       vertical: 0,
     ),
     color: const Color(0xFF57606A),
-    // border: Border(
-    //   left: BorderSide(
-    //     width: emToPx(0.25),
-    //     style: BorderStyle.solid,
-    //     color: separatorColor,
-    //   ),
-    // ),
   ),
   // 'blockquote>:first-child': Style(margin: const EdgeInsets.only(top: 0)),
   // 'blockquote>:last-child': Style(margin: const EdgeInsets.only(bottom: 0)),
@@ -109,7 +102,7 @@ Map<String, Style> markdownStyle = {
     padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
     margin: const EdgeInsets.only(bottom: 16),
   ),
-  'ol': _list,
+  'ol': _list.copyWith(padding: const EdgeInsets.only(left: 0)),
   'ol ol': _list.copyWith(
     listStyleType: ListStyleType.LOWER_ROMAN,
     margin: const EdgeInsets.symmetric(vertical: 0),
@@ -148,27 +141,6 @@ Map<String, Style> markdownStyle = {
       ),
     ),
   ),
-  // 'pre': Style(
-  //   lineHeight: LineHeight.em(1.45),
-  //   fontSize: const FontSize(12),
-  //   fontFamily: 'ui-monospace',
-  // ),
-  // 'code, p code': Style(
-  //   padding: EdgeInsets.symmetric(
-  //     vertical: emToPx(0.2),
-  //     horizontal: emToPx(0.4),
-  //   ),
-  //   margin: const EdgeInsets.all(0),
-  //   backgroundColor: const Color.fromARGB(31, 175, 184, 193),
-  //   fontSize: const FontSize(12),
-  //   fontFamily: 'ui-monospace',
-  // ),
-  // 'pre code': Style(
-  //   display: Display.INLINE,
-  //   padding: const EdgeInsets.all(0),
-  //   margin: const EdgeInsets.all(0),
-  //   backgroundColor: Colors.transparent,
-  // ),
   'h1 code, h2 code, h3 code. h4 code, h5 code, h6 code': Style(
     padding: EdgeInsets.symmetric(
       vertical: 0,

@@ -7,7 +7,7 @@ class BlockQuote extends StatefulWidget {
     this.children,
   });
 
-  final String? parent;
+  final Widget? parent;
   final List<Widget>? children;
 
   @override
@@ -18,13 +18,12 @@ class _BlockQuoteState extends State<BlockQuote> {
   @override
   Widget build(BuildContext context) {
     final children = [];
-    if (widget.parent != null && widget.parent!.trim().isNotEmpty) {
-      children.add(Text(widget.parent ?? ''));
+    if (widget.parent != null) {
+      children.add(widget.parent);
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      // margin: const EdgeInsets.only(top: 6),
       decoration: const BoxDecoration(
         border: Border(
           left: BorderSide(
