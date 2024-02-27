@@ -2,7 +2,7 @@ import 'package:bleck_markdown/src/css_utils.dart';
 import 'package:flutter/material.dart';
 
 class InlineCode extends StatelessWidget {
-  const InlineCode(String text, {super.key}) : source = text;
+  const InlineCode(this.source, {super.key});
 
   final String source;
 

@@ -6,7 +6,7 @@ class CodeBlock extends StatefulWidget {
   const CodeBlock({
     super.key,
     required this.code,
-    this.language,
+    this.language = 'js',
     this.tabSize = 4,
     this.theme = nordTheme,
   });

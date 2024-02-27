@@ -28,9 +28,5 @@ class _TaskItemState extends State<TaskItem> {
         Text(widget.title),
       ],
     );
-    // return ListTile(
-    //   leading: Checkbox(value: widget.checked, onChanged: null),
-    //   title: Text(widget.title),
-    // );
   }
 }

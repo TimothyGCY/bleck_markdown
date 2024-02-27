@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 const Color separatorColor = Color(0xFFD7DDE3);
-const Border bottomLine = Border(
+Border bottomLine = Border(
   bottom: BorderSide(
     width: 1,
     style: BorderStyle.solid,
-    color: separatorColor,
+    color: separatorColor.withOpacity(0.5),
   ),
 );
 
 Style _headline = Style(
-  margin: const EdgeInsets.only(
+  margin: Margins.only(
     top: 24,
     bottom: 16,
   ),
@@ -20,11 +20,11 @@ Style _headline = Style(
   lineHeight: const LineHeight(1.25),
 );
 Style _list = Style(
-  margin: const EdgeInsets.symmetric(vertical: 0),
+  margin: Margins.symmetric(vertical: 0),
   // padding: EdgeInsets.only(left: emToPx(2)),
 );
 Style _tableCell = Style(
-  padding: const EdgeInsets.symmetric(
+  padding: HtmlPaddings.symmetric(
     vertical: 6,
     horizontal: 13,
   ),
@@ -37,50 +37,50 @@ Style _tableCell = Style(
 
 Map<String, Style> markdownStyle = {
   'h1': _headline.copyWith(
-    margin: EdgeInsets.symmetric(
+    margin: Margins.symmetric(
       horizontal: 0,
       vertical: emToPx(0.67),
     ),
-    padding: EdgeInsets.only(bottom: emToPx(0.3)),
-    fontSize: FontSize.em(2),
+    padding: HtmlPaddings.only(bottom: emToPx(0.3)),
+    fontSize: FontSize(2, Unit.em),
     border: bottomLine,
   ),
   'h2': _headline.copyWith(
-    padding: EdgeInsets.only(bottom: emToPx(0.3)),
-    fontSize: FontSize.em(1.5),
+    padding: HtmlPaddings.only(bottom: emToPx(0.3)),
+    fontSize: FontSize(1.5, Unit.em),
     border: bottomLine,
   ),
   'h3': _headline.copyWith(
-    fontSize: FontSize.em(1.25),
+    fontSize: FontSize(1.25, Unit.em),
   ),
   'h4': _headline.copyWith(
-    fontSize: FontSize.em(1),
+    fontSize: FontSize(1, Unit.em),
   ),
   'h5': _headline.copyWith(
-    fontSize: FontSize.em(0.875),
+    fontSize: FontSize(0.875, Unit.em),
   ),
   'h6': _headline.copyWith(
-    fontSize: FontSize.em(0.85),
+    fontSize: FontSize(0.85, Unit.em),
     color: const Color(0xFF57606A),
   ),
   'p': Style(
-    margin: const EdgeInsets.only(
+    margin: Margins.only(
       top: 0,
       bottom: 10,
     ),
   ),
   'hr': Style(
-    height: emToPx(0.25),
-    padding: const EdgeInsets.all(0),
-    margin: const EdgeInsets.symmetric(
+    height: Height(emToPx(0.25)),
+    padding: HtmlPaddings.zero,
+    margin: Margins.symmetric(
       vertical: 24,
       horizontal: 0,
     ),
     backgroundColor: separatorColor,
   ),
   'blockquote': Style(
-    margin: const EdgeInsets.only(top: 0, bottom: 16),
-    padding: const EdgeInsets.symmetric(
+    margin: Margins.only(top: 0, bottom: 16),
+    padding: HtmlPaddings.symmetric(
       horizontal: 0,
       vertical: 0,
     ),
@@ -89,60 +89,63 @@ Map<String, Style> markdownStyle = {
   // 'blockquote>:first-child': Style(margin: const EdgeInsets.only(top: 0)),
   // 'blockquote>:last-child': Style(margin: const EdgeInsets.only(bottom: 0)),
   'dl': Style(
-    padding: const EdgeInsets.all(0),
+    padding: HtmlPaddings.zero,
   ),
   'dt': Style(
-    padding: const EdgeInsets.all(0),
-    margin: const EdgeInsets.only(top: 16),
-    fontSize: FontSize.em(1),
+    padding: HtmlPaddings.zero,
+    margin: Margins.only(top: 16),
+    fontSize: FontSize(1),
     fontStyle: FontStyle.italic,
     fontWeight: FontWeight.w600,
   ),
   'dd': Style(
-    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-    margin: const EdgeInsets.only(bottom: 16),
+    padding: HtmlPaddings.symmetric(
+      vertical: 0,
+      horizontal: 16,
+    ),
+    margin: Margins.only(bottom: 16),
   ),
-  'ol': _list.copyWith(padding: const EdgeInsets.only(left: 0)),
+  'ol': _list.copyWith(padding: HtmlPaddings.only(left: 0)),
   'ol ol': _list.copyWith(
-    listStyleType: ListStyleType.LOWER_ROMAN,
-    margin: const EdgeInsets.symmetric(vertical: 0),
+    listStyleType: ListStyleType.lowerRoman,
+    margin: Margins.symmetric(vertical: 0),
   ),
   'ol ul': _list.copyWith(
-    margin: const EdgeInsets.symmetric(vertical: 0),
+    margin: Margins.symmetric(vertical: 0),
   ),
-  'ol ol ol': _list.copyWith(listStyleType: ListStyleType.LOWER_ALPHA),
-  'ol ul ol': _list.copyWith(listStyleType: ListStyleType.LOWER_ALPHA),
+  'ol ol ol': _list.copyWith(listStyleType: ListStyleType.lowerAlpha),
+  'ol ul ol': _list.copyWith(listStyleType: ListStyleType.lowerAlpha),
   'ul': _list,
   'ul ul': _list.copyWith(
-    margin: const EdgeInsets.symmetric(vertical: 0),
+    margin: Margins.symmetric(vertical: 0),
   ),
   'ul ol': _list.copyWith(
-    listStyleType: ListStyleType.LOWER_ROMAN,
-    margin: const EdgeInsets.symmetric(vertical: 0),
+    listStyleType: ListStyleType.lowerRoman,
+    margin: Margins.symmetric(vertical: 0),
   ),
-  'ul ol ol': _list.copyWith(listStyleType: ListStyleType.LOWER_ALPHA),
-  'ul ul ol': _list.copyWith(listStyleType: ListStyleType.LOWER_ALPHA),
+  'ul ol ol': _list.copyWith(listStyleType: ListStyleType.lowerAlpha),
+  'ul ul ol': _list.copyWith(listStyleType: ListStyleType.lowerAlpha),
   '.task-list-item': _list.copyWith(
-    listStyleType: ListStyleType.NONE,
-    padding: const EdgeInsets.all(0),
+    listStyleType: ListStyleType.none,
+    padding: HtmlPaddings.zero,
   ),
   'th': _tableCell.copyWith(
     fontWeight: FontWeight.w600,
-    backgroundColor: const Color(0xFFF6F8FA),
+    backgroundColor: Colors.transparent,
   ),
   'td': _tableCell,
   'tr': Style(
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.transparent,
     border: const Border(
       top: BorderSide(
-        width: 1,
+        width: 0.5,
         style: BorderStyle.solid,
         color: separatorColor,
       ),
     ),
   ),
-  'h1 code, h2 code, h3 code. h4 code, h5 code, h6 code': Style(
-    padding: EdgeInsets.symmetric(
+  'h1 code, h2 code, h3 code, h4 code, h5 code, h6 code': Style(
+    padding: HtmlPaddings.symmetric(
       vertical: 0,
       horizontal: emToPx(0.2),
     ),
